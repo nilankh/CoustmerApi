@@ -41,7 +41,8 @@ app.put('/api/courses/:id', (req, res) => {
     const course = courses.find(c => c.id === parseInt(req.params.id))
     // req.params.id return strings to parse this string into integer
     if(!course){ //404
-        res.status(404).send('The course with given id was not found.');
+        return res.status(404).send('The course with given id was not found.');
+        
     }
     // validate
     
@@ -60,7 +61,21 @@ app.put('/api/courses/:id', (req, res) => {
 
 });
 
+app.delete('/api/courses/:id', (req, res) => {
+// Look up the course
+// not exisiting return 401
+         const course = courses.find(c => c.id === parseInt(req.params.id))
+// req.params.id return strings to parse this string into integer
+    if(!course){ //404
+        res.status(404).send('The course with given id was not found.');
+        return;
+    }
+    // delete
+    const index = courses.indexOf(course);
+    courses.splice(index, 1);
 
+    res.send(course);
+});
 
 function validateCourse(course){
     const schema = {
@@ -75,6 +90,7 @@ app.get('/api/courses/:id', (req, res) => {
     // req.params.id return strings to parse this string into integer
     if(!course){ //404
         res.status(404).send('The course with given id was not found.');
+        return;
     }else{
         res.send(course);
     }
